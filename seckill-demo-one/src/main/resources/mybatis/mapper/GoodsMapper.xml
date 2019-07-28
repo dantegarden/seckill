@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.seckill.one.mapper.GoodsMapper">
+    <select id="listGoodsVO" resultType="com.example.seckill.one.vo.GoodsVO">
+       select g.*, sg.stock_count, sg.start_date, sg.end_date, sg.seckill_price
+            from tb_seckill_goods sg
+            left join tb_goods g on sg.goods_id = g.id
+    </select>
+
+    <select id="fetchGoodsvoById" parameterType="Long" resultType="com.example.seckill.one.vo.GoodsVO">
+       select g.*, sg.stock_count, sg.start_date, sg.end_date, sg.seckill_price
+            from tb_seckill_goods sg
+            left join tb_goods g on sg.goods_id = g.id
+            where g.id = #{goodsId}
+    </select>
+</mapper>
