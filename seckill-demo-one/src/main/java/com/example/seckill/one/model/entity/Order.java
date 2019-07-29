@@ -15,13 +15,14 @@ import java.util.Date;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @TableName("tb_order_info")
-public class Order extends Model<Order> {
+public class Order {
 
     private static final long serialVersionUID = 1L;
 
     @TableId
     private Long id;
     private Long userId;
+    private Long goodsId;
     private Long deliveryAddrId;
     private String goodsName;
     private Integer goodsCount;

@@ -11,4 +11,8 @@ public interface UserService extends IService<User> {
     String login(HttpServletResponse response, LoginVO loginVO);
 
     User getCurUser(HttpServletResponse response, String token);
+
+    User getUserById(Long id);
+
+    Boolean updatePassword(String token, Long id, String formPass);
 }

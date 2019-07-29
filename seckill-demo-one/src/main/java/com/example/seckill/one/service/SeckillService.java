@@ -6,4 +6,5 @@ import com.example.seckill.one.vo.GoodsVO;
 
 public interface SeckillService {
     Order seckill(User user, GoodsVO goods);
+
 }

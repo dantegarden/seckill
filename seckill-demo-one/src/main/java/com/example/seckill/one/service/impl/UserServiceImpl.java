@@ -70,6 +70,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return user;
     }
 
+    @Override
+    public User getUserById(Long id) {
+        //取缓存
+        User user = redisService.get(UserKey.USER_ID, id.toString(), User.class);
+        if(user != null) {
+            return user;
+        }
+        //取数据库
+        user = userMapper.selectById(id);
+        if(user != null) {
+            redisService.set(UserKey.USER_ID, id.toString(), user);
+        }
+        return user;
+    }
+
+    @Override
+    public Boolean updatePassword(String token, Long id, String formPass) {
+        //取user
+        User user = getById(id);
+        if(user == null) {
+            throw new GlobalException(ResultErrorEnum.MOBILE_NOT_EXIST);
+        }
+        //先更新数据库
+        User toBeUpdate = new User();
+        toBeUpdate.setId(id);
+        toBeUpdate.setPassword(MD5Utils.formPassToDBPass(formPass, user.getSalt()));
+        userMapper.updateById(toBeUpdate);
+        //再处理缓存
+        redisService.del(UserKey.USER_ID, id.toString());
+        user.setPassword(toBeUpdate.getPassword());
+        redisService.set(UserKey.USER_TOKEN, token, user);
+        //这个顺序不可更改 参考 http://blog.csdn.net/tTU1EvLDeLFq5btqiK/article/details/78693323
+        return Boolean.TRUE;
+    }
+
     private void refreshToken(HttpServletResponse response, String token, User user){
         //存入redis
         redisService.set(UserKey.USER_TOKEN, token, user);

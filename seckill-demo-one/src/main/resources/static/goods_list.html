@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>商品列表</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- jquery -->
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+    <!-- jquery-validator -->
+    <script type="text/javascript" src="jquery-validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="jquery-validation/localization/messages_zh.min.js"></script>
+    <!-- layer -->
+    <script type="text/javascript" src="layer/layer.js"></script>
+    <!-- md5.js -->
+    <script type="text/javascript" src="js/md5.min.js"></script>
+    <!-- common.js -->
+    <script type="text/javascript" src="js/common.js"></script>
+</head>
+<body>
+    <p id="userTip" ></p>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">秒杀商品列表</div>
+        <table class="table" id="goodslist">
+
+        </table>
+    </div>
+</body>
+
+<script>
+    $(function(){
+        getGoodsList();
+    });
+
+    function render(data){
+        if(data){
+            $("#userTip").text("hello：" + data.user.nickname);
+            var tbody = "<tr><td>商品名称</td><td>商品图片</td><td>商品原价</td><td>秒杀价</td><td>库存数量</td><td>详情</td></tr>";
+            if(data.goodsList && data.goodsList.length > 0){
+                for(var i=0; i<data.goodsList.length; i++ ){
+                    var goods = data.goodsList[i]
+                    tbody += "<tr>"
+                        + "<td>" + goods.goodsName + "</td>"
+                        + "<td><img src=\"" + goods.goodsImg + "\" width=\"100\" height=\"100\" /></td>"
+                        + "<td>" + goods.goodsPrice + "</td>"
+                        + "<td>" + goods.seckillPrice + "</td>"
+                        + "<td>" + goods.stockCount + "</td>"
+                        + "<td><a href=\"" + ctx + "/goods_detail.html?goodsId=" + goods.id + "\">点我抢购</a></td>"
+                        + "</tr>"
+                }
+            }
+            $("#goodslist").html(tbody)
+        }
+    }
+
+    function getGoodsList(){
+        $.ajax({
+            url: ctx + "/goods/list",
+            type: "GET",
+            success:function(data){
+                if(data.code == 200){
+                    render(data.data);
+                }else{
+                    layer.msg(data.msg);
+                }
+            },
+            error:function(){
+                layer.msg("客户端请求有误");
+            }
+        });
+    }
+</script>
+</html>

@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @TableName("tb_seckill_order")
-public class SeckillOrder extends Model<SeckillOrder> {
+public class SeckillOrder {
 
     private static final long serialVersionUID = 1L;
 

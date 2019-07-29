@@ -1,5 +1,6 @@
 package com.example.seckill.one.config;
 
+import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
@@ -30,4 +31,15 @@ public class MybatisPlusConfig {
     public PaginationInterceptor paginationInterceptor() {
         return new PaginationInterceptor();
     }
+
+
+    /**
+     * 乐观锁 插件
+     * @return
+     */
+    @Bean
+    public OptimisticLockerInterceptor optimisticLoker() {
+        return new OptimisticLockerInterceptor();
+    }
+
 }

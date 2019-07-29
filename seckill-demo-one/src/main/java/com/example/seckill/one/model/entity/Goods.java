@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @TableName("tb_goods")
-public class Goods extends Model<Goods> {
+public class Goods {
 
     private static final long serialVersionUID = 1L;
 

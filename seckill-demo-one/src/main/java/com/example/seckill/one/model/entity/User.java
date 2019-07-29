@@ -14,7 +14,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @TableName("tb_user")
-public class User extends Model<User> {
+public class User {
 
     private static final long serialVersionUID = 1L;
 

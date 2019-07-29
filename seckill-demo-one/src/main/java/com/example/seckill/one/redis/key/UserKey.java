@@ -6,6 +6,7 @@ public class UserKey extends KeyPrefix {
 
     public static final String REDIS_USER_TOKEN_TEMPLATE = "USER-TOKEN";
     public static final int REDIS_USER_TOKEN_EXPIRE = 3600*24*1;
+    public static final int REDIS_USER_ID_EXPIRE = 3600*24*1;
 
     public UserKey(String prefix) {
         super(prefix);
@@ -16,4 +17,5 @@ public class UserKey extends KeyPrefix {
     }
 
     public static UserKey USER_TOKEN = new UserKey(REDIS_USER_TOKEN_TEMPLATE, REDIS_USER_TOKEN_EXPIRE);
+    public static UserKey USER_ID = new UserKey(REDIS_USER_TOKEN_TEMPLATE, REDIS_USER_TOKEN_EXPIRE);
 }

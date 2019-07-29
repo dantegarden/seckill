@@ -2,6 +2,7 @@ package com.example.seckill.one.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.Version;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +15,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @TableName("tb_seckill_goods")
-public class SeckillGoods extends Model<SeckillGoods> {
+public class SeckillGoods {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,4 +26,6 @@ public class SeckillGoods extends Model<SeckillGoods> {
     private Integer stockCount;
     private Date startDate;
     private Date endDate;
+    @Version
+    private Integer version;
 }

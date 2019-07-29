@@ -8,7 +8,7 @@ import com.example.seckill.one.vo.GoodsVO;
 
 public interface OrderService extends IService<Order> {
 
-    public SeckillOrder fetchSeckillOrderByUserIdAndGoodsId(Long userId, Long goodsId);
+    SeckillOrder fetchSeckillOrderByUserIdAndGoodsId(Long userId, Long goodsId);
 
     Order createOrder(User user, GoodsVO goods);
 }

@@ -43,10 +43,10 @@ public class DemoController {
 		return Result.ok(test2);
 	}
 
-	@RequestMapping("/thymeleaf")
-	public String  thymeleaf(Model model) {
-		model.addAttribute("name", "Joshua");
-		return "hello";
-	}
+//	@RequestMapping("/thymeleaf")
+//	public String  thymeleaf(Model model) {
+//		model.addAttribute("name", "Joshua");
+//		return "hello";
+//	}
 	 	
 }

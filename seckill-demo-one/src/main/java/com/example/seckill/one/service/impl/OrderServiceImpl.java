@@ -8,6 +8,8 @@ import com.example.seckill.one.mapper.SeckillOrderMapper;
 import com.example.seckill.one.model.entity.Order;
 import com.example.seckill.one.model.entity.SeckillOrder;
 import com.example.seckill.one.model.entity.User;
+import com.example.seckill.one.redis.RedisService;
+import com.example.seckill.one.redis.key.OrderKey;
 import com.example.seckill.one.service.OrderService;
 import com.example.seckill.one.service.UserService;
 import com.example.seckill.one.vo.GoodsVO;
@@ -26,11 +28,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private SeckillOrderMapper seckillOrderMapper;
 
+    @Autowired
+    private RedisService redisService;
+
     @Override
     public SeckillOrder fetchSeckillOrderByUserIdAndGoodsId(Long userId, Long goodsId) {
-        QueryWrapper<SeckillOrder> queryWrapper = Wrappers.<SeckillOrder>query();
-        queryWrapper.eq("goods_id", goodsId).eq("user_id", userId);
-        SeckillOrder order = seckillOrderMapper.selectOne(queryWrapper);
+//        QueryWrapper<SeckillOrder> queryWrapper = Wrappers.<SeckillOrder>query();
+////        queryWrapper.eq("goods_id", goodsId).eq("user_id", userId);
+////        SeckillOrder order = seckillOrderMapper.selectOne(queryWrapper);
+        SeckillOrder order =  redisService.get(OrderKey.UID_GID, userId+"_"+goodsId, SeckillOrder.class);
         return order;
     }
 
@@ -40,6 +46,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         Order newOrder = new Order();
         newOrder.setCreateDate(new Date())
                 .setUserId(user.getId())
+                .setGoodsId(goods.getId())
                 .setDeliveryAddrId(0L)
                 .setGoodsCount(1)
                 .setGoodsName(goods.getGoodsName())
@@ -54,6 +61,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 .setUserId(user.getId())
                 .setGoodsId(goods.getId());
         seckillOrderMapper.insert(newSeckillOrder);
+
+        //缓存秒杀订单对象，永不过期
+        redisService.set(OrderKey.UID_GID, user.getId()+"_"+goods.getId(), newSeckillOrder);
 
         return newOrder;
     }

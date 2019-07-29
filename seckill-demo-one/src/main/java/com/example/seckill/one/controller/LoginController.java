@@ -10,12 +10,10 @@ import com.example.seckill.one.service.UserService;
 import com.example.seckill.one.vo.LoginVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/login")
 @Slf4j
 public class LoginController {
@@ -27,15 +25,14 @@ public class LoginController {
 	private RedisService redisService;
 
 	/**跳转登录页面**/
-    @RequestMapping("/toLogin")
-    public String toLogin(Model model, HttpServletRequest request) {
-        return "login";
-    }
+//    @RequestMapping("/toLogin")
+//    public String toLogin(Model model, HttpServletRequest request) {
+//        return "login";
+//    }
 
     /**登录逻辑**/
     @RequestMapping("/doLogin")
-    @ResponseBody
-    public Result<Boolean> doLogin(HttpServletResponse response, @Valid LoginVO loginVO) {
+    public Result<String> doLogin(HttpServletResponse response, @Valid LoginVO loginVO) {
     	log.info(loginVO.toString());
     	//登录
     	String token = userService.login(response, loginVO);

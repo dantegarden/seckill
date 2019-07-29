@@ -41,25 +41,7 @@ public class UserTest {
         System.out.println("create user");
 
         //插入数据库
-        Connection conn = DBUtils.getConn();
-        String sql = "insert into tb_user(login_name, login_count, nickname, register_date, salt, password, mobile, id)values(?,?,?,?,?,?,?,?)";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        for(int i=0;i<users.size();i++) {
-            User user = users.get(i);
-            pstmt.setString(1, user.getNickname());
-            pstmt.setInt(2, user.getLoginCount());
-            pstmt.setString(3, user.getNickname());
-            pstmt.setTimestamp(4, new Timestamp(user.getRegisterDate().getTime()));
-            pstmt.setString(5, user.getSalt());
-            pstmt.setString(6, user.getPassword());
-            pstmt.setString(7,user.getMobile());
-            pstmt.setLong(8, user.getId());
-            pstmt.addBatch();
-        }
-        pstmt.executeBatch();
-        pstmt.close();
-        conn.close();
-        System.out.println("insert to db");
+        //updateDB(users);
 
         //登录，生成token
 
@@ -107,6 +89,45 @@ public class UserTest {
     }
 
 
+    public void updateDB(List<User> users){
+        try{
+            Connection conn = DBUtils.getConn();
+            conn.setAutoCommit(false);
+            String sql = "insert into tb_user(login_name, login_count, nickname, register_date, salt, password, mobile, id)values(?,?,?,?,?,?,?,?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            for(int i=0; i<users.size(); i++){
+                //插入数据库
+                User user = users.get(i);
+                pstmt.setString(1, user.getNickname());
+                pstmt.setInt(2, user.getLoginCount());
+                pstmt.setString(3, user.getNickname());
+                pstmt.setTimestamp(4, new Timestamp(user.getRegisterDate().getTime()));
+                pstmt.setString(5, user.getSalt());
+                pstmt.setString(6, user.getPassword());
+                pstmt.setString(7,user.getMobile());
+                pstmt.setLong(8, user.getId());
+                pstmt.addBatch();
+                if((i+1) % 1000 == 0){
+                    pstmt.executeBatch();
+                    conn.commit();
+                    pstmt.close();
+                    conn.close();
+
+                    System.out.println(String.format("插入user [%s-%s]", i-999, i+1));
+
+                    conn = DBUtils.getConn();
+                    conn.setAutoCommit(false);
+                    pstmt = conn.prepareStatement(sql);
+                }
+
+            }
+
+            System.out.println("insert to db");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 
     @Test
     public void test() throws Exception {
