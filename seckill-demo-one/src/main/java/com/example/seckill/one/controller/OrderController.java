@@ -11,7 +11,6 @@ import com.example.seckill.one.service.UserService;
 import com.example.seckill.one.vo.GoodsVO;
 import com.example.seckill.one.vo.OrderDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 

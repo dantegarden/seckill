@@ -67,7 +67,7 @@ public class RedisService {
      */
     public Set<String> keys(KeyPrefix prefix) {
         String pattern  = prefix.getPrefix();
-        return redisUtils.keys(pattern);
+        return redisUtils.keys(pattern + ":*");
     }
 
     /**

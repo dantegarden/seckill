@@ -11,7 +11,6 @@ import com.example.seckill.one.model.entity.Goods;
 import com.example.seckill.one.model.entity.SeckillGoods;
 import com.example.seckill.one.service.GoodsService;
 import com.example.seckill.one.vo.GoodsVO;
-import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +42,15 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         QueryWrapper queryWrapper = Wrappers.<SeckillGoods>query();
         queryWrapper.eq("goods_id", goodsId);
         return seckillGoodsMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public int updateSeckillGoodsBatchByIds(List<SeckillGoods> seckillGoodsList) {
+        int i = 0;
+        for (SeckillGoods seckillGoods: seckillGoodsList) {
+            i += seckillGoodsMapper.updateById(seckillGoods);
+        }
+        return i;
     }
 
     @Override

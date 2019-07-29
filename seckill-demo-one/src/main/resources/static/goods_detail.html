@@ -69,6 +69,39 @@
 </div>
 </body>
 <script>
+function getSeckillResult(goodsId){
+    g_showLoading();
+    $.ajax({
+        url: ctx + "/seckill/result",
+        type: "GET",
+        data:{
+            goodsId: goodsId,
+        },
+        success:function(data){
+            if(data.code == 200){ //秒杀到了
+                var orderId = data.data.orderId;
+                layer.confirm("恭喜你，秒杀成功！查看订单？", {btn:["确定","取消"]},
+                    function(){
+                        window.location.href = ctx + "/order_detail.html?orderId=" + orderId;
+                    },
+                    function(){
+                        layer.closeAll();
+                    });
+            }else if(data.code == 200102){
+                layer.msg("对不起，秒杀失败");
+            }else if(data.code == 200101){ //继续轮序
+                setTimeout(function(){
+                    getSeckillResult(goodsId);
+                }, 50);
+            }else{
+                layer.msg(data.msg);
+            }
+        },
+        error:function(){
+            layer.msg("客户端请求有误");
+        }
+    });
+}
 
 function doSeckill(){
 	$.ajax({
@@ -78,8 +111,8 @@ function doSeckill(){
 			goodsId: $("#goodsId").val(),
 		},
 		success:function(data){
-			if(data.code == 200){
-				window.location.href = ctx + "/order_detail.html?orderId=" + data.data.id;
+			if(data.code == 200101){ //秒杀已排队，开始轮询结果
+                getSeckillResult($("#goodsId").val());
 			}else if(data.code == 500800){ //用户未登录
 				layer.msg(data.message);
 				setTimeout(function(){

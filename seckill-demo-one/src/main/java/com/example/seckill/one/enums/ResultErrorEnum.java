@@ -1,10 +1,10 @@
 package com.example.seckill.one.enums;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public enum ResultErrorEnum {
+
     SERVER_ERROR(500100, "服务端异常"),
     //登录模块
     BIND_ERROR(500101, "请求参数校验异常：%s"),

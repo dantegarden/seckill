@@ -67,4 +67,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         return newOrder;
     }
+
+    @Override
+    public void reset() {
+        orderMapper.delete((QueryWrapper)Wrappers.<Order>query().isNotNull("id"));
+        seckillOrderMapper.delete((QueryWrapper)Wrappers.<SeckillOrder>query().isNotNull("id"));
+    }
 }

@@ -2,6 +2,7 @@ package com.example.seckill.one.controller;
 
 import com.example.seckill.one.bean.Result;
 import com.example.seckill.one.model.entity.User;
+import com.example.seckill.one.mq.MQSender;
 import com.example.seckill.one.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,10 +18,22 @@ public class DemoController {
 	@Autowired
 	private RedisUtils redisUtils;
 
+	@Autowired
+	private MQSender mqSender;
+
 	@RequestMapping("/")
 	@ResponseBody
 	public Result<String> home() {
 		return Result.ok("Hello World!");
+	}
+
+	@RequestMapping("/sendMQ")
+	@ResponseBody
+	public Result<String> sendMQ() {
+		User user = new User();
+		user.setId(4L).setLoginName("test");
+		mqSender.send(user);
+		return Result.ok(user);
 	}
 
 	@RequestMapping("/set")

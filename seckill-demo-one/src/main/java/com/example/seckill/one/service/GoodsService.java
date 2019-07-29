@@ -11,6 +11,8 @@ public interface GoodsService extends IService<Goods> {
     List<GoodsVO> listGoodsVO();
     GoodsVO fetchGoodsvoById(Long goodsId);
     SeckillGoods fetchByGoodsId(Long goodsId);
+    int updateSeckillGoodsBatchByIds(List<SeckillGoods> seckillGoodsList);
 
     void reduceStock(GoodsVO goods);
+
 }

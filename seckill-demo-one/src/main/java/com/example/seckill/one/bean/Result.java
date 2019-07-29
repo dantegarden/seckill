@@ -3,6 +3,7 @@ package com.example.seckill.one.bean;
 
 import com.example.seckill.one.enums.HttpStatusCodeEnum;
 import com.example.seckill.one.enums.ResultErrorEnum;
+import com.example.seckill.one.enums.ResultSuccessEnum;
 
 public class Result<T> {
     private Boolean status = true;
@@ -36,7 +37,9 @@ public class Result<T> {
     public static Result failByEnum(ResultErrorEnum resultEnum) {
         return new Result(false, resultEnum.getMessage(), resultEnum.getCode());
     }
-
+    public static Result okByEnum(ResultSuccessEnum resultEnum) {
+        return new Result(true, resultEnum.getMessage(), resultEnum.getCode());
+    }
 
     public Result(T data) {
         super();

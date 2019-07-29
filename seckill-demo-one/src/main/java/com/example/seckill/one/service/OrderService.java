@@ -11,4 +11,7 @@ public interface OrderService extends IService<Order> {
     SeckillOrder fetchSeckillOrderByUserIdAndGoodsId(Long userId, Long goodsId);
 
     Order createOrder(User user, GoodsVO goods);
+
+    /**方便测试，清除两个订单表*/
+    void reset();
 }
