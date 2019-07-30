@@ -49,7 +49,13 @@
         		<button class="btn btn-primary btn-block" type="submit" id="buyButton">立即秒杀</button>
         		<input type="hidden" name="goodsId"  id="goodsId" />
         	</form>-->
-        	<button class="btn btn-primary btn-block" type="button" id="buyButton"onclick="doSeckill()">立即秒杀</button>
+            <div class="row">
+                <div class="form-inline">
+                    <img id="verifyCodeImg" width="80" height="32" style="display:none" onclick="refreshVerifyCode()"/>
+                    <input id="verifyCode"  class="form-control" style="display:none"/>
+                    <button class="btn btn-primary" type="button" id="buyButton" onclick="getSeckillPath()">立即秒杀</button>
+                </div>
+            </div>
         	<input type="hidden" name="goodsId"  id="goodsId" />
         </td>
      </tr>
@@ -92,7 +98,7 @@ function getSeckillResult(goodsId){
             }else if(data.code == 200101){ //继续轮序
                 setTimeout(function(){
                     getSeckillResult(goodsId);
-                }, 50);
+                }, 500);
             }else{
                 layer.msg(data.msg);
             }
@@ -103,9 +109,38 @@ function getSeckillResult(goodsId){
     });
 }
 
-function doSeckill(){
+
+function getSeckillPath(){
+    $.ajax({
+        url: ctx + "/seckill/seckillPath",
+        type: "GET",
+        data:{
+            goodsId: $("#goodsId").val(),
+            verifyCode: $("#verifyCode").val()
+        },
+        success:function(data){
+            if(data.code == 200){
+                doSeckill(data.data) //得到秒杀接口的随机path
+            }else if(data.code == 500800){ //用户未登录
+                layer.msg(data.message);
+                setTimeout(function(){
+                    window.location.href = ctx + "/login.html";
+                }, 3000)
+            }else{
+                layer.msg(data.message);
+            }
+            refreshVerifyCode();
+        },
+        error:function(){
+            layer.msg("客户端请求有误");
+        }
+    });
+
+}
+
+function doSeckill(path){
 	$.ajax({
-		url: ctx + "/seckill/doSeckill",
+		url: ctx + "/seckill/" + path + "/doSeckill",
 		type: "POST",
 		data:{
 			goodsId: $("#goodsId").val(),
@@ -113,11 +148,6 @@ function doSeckill(){
 		success:function(data){
 			if(data.code == 200101){ //秒杀已排队，开始轮询结果
                 getSeckillResult($("#goodsId").val());
-			}else if(data.code == 500800){ //用户未登录
-				layer.msg(data.message);
-				setTimeout(function(){
-                    window.location.href = ctx + "/login.html";
-                }, 3000)
 			}else{ //无库存
                 layer.msg(data.message);
             }
@@ -190,11 +220,19 @@ function countDown(){
 			clearTimeout(timeout);
 		}
 		$("#seckillTip").html("秒杀进行中");
+        $("#verifyCodeImg").attr("src", ctx + "/seckill/verifyCode?goodsId="+$("#goodsId").val());
+        $("#verifyCodeImg").show();
+        $("#verifyCode").show();
 	}else{//秒杀已经结束
 		$("#buyButton").attr("disabled", true);
 		$("#seckillTip").html("秒杀已经结束");
+        $("#verifyCodeImg").hide();
+        $("#verifyCode").hide();
 	}
 }
 
+function refreshVerifyCode(){
+    $("#verifyCodeImg").attr("src", ctx + "/seckill/verifyCode?goodsId="+$("#goodsId").val()+"&timestamp="+new Date().getTime()); //加时间戳防止走缓存
+}
 </script>
 </html>

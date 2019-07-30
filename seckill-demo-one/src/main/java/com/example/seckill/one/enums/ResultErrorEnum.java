@@ -5,7 +5,10 @@ import lombok.Getter;
 @Getter
 public enum ResultErrorEnum {
 
-    SERVER_ERROR(500100, "服务端异常"),
+    SERVER_ERROR(500000, "服务端异常"),
+    REQUEST_ILLEGAL(500001, "请求非法"),
+    VERIFYCODE_FALUT(500002, "验证码无效"),
+    ACCESS_LIMIT(500003, "访问太频繁，请稍后再试"),
     //登录模块
     BIND_ERROR(500101, "请求参数校验异常：%s"),
     SESSION_ERROR(500210, "Session不存在或者已经失效"),

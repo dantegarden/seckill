@@ -7,17 +7,23 @@ import com.example.seckill.one.mapper.GoodsMapper;
 import com.example.seckill.one.model.entity.*;
 import com.example.seckill.one.redis.RedisService;
 import com.example.seckill.one.redis.key.GoodsKey;
+import com.example.seckill.one.redis.key.SeckillKey;
 import com.example.seckill.one.service.GoodsService;
 import com.example.seckill.one.service.OrderService;
 import com.example.seckill.one.service.SeckillService;
+import com.example.seckill.one.utils.VerifyCodeUtils;
 import com.example.seckill.one.vo.GoodsVO;
 import com.example.seckill.one.vo.SeckillResultVO;
+import com.example.seckill.one.vo.VerifyCodeVO;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @Transactional
@@ -67,5 +73,16 @@ public class SeckillServiceImpl implements SeckillService {
 
         orderService.reset();
     }
+
+    @Override
+    public BufferedImage createVerifyCode(User user, Long goodsId) {
+        VerifyCodeVO verifyCode = VerifyCodeUtils.createVerifyCode();
+        //把验证码存到redis中
+        int rnd = verifyCode.getCalc();
+        //数学公式的值缓存到redis
+        redisService.set(SeckillKey.VERIFY_CODE, user.getId()+"_"+goodsId, rnd);
+        return verifyCode.getImage();
+    }
+
 
 }

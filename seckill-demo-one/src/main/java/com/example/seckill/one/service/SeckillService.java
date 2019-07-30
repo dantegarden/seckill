@@ -6,6 +6,7 @@ import com.example.seckill.one.model.entity.User;
 import com.example.seckill.one.vo.GoodsVO;
 import com.example.seckill.one.vo.SeckillResultVO;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 public interface SeckillService {
@@ -16,4 +17,6 @@ public interface SeckillService {
     boolean isGoodsOver(Long goodsId);
 
     void reset(List<GoodsVO> goodsList);
+
+    BufferedImage createVerifyCode(User user, Long goodsId);
 }

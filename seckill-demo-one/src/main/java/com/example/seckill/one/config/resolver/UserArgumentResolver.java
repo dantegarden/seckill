@@ -4,6 +4,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.example.seckill.one.config.annotation.UserContext;
 import com.example.seckill.one.constants.GlobalConstants;
 import com.example.seckill.one.model.entity.User;
 import com.example.seckill.one.service.UserService;
@@ -32,16 +33,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 	/**处理逻辑，将请求里的cookie拿到，去redis里取user，返回值会被绑定到方法入参上**/
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-		HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-		HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
-		
-		String paramToken = request.getParameter(GlobalConstants.COOKIE_NAME_TOKEN);
-		Cookie tokenCookie = CookieUtils.get(request, GlobalConstants.COOKIE_NAME_TOKEN);
-		if(tokenCookie == null || (StringUtils.isEmpty(tokenCookie.getValue()) && StringUtils.isEmpty(paramToken))) {
-			return null;
-		}
-		String token = StringUtils.isEmpty(paramToken)?tokenCookie.getValue():paramToken;
-		return userService.getCurUser(response, token);
+		return UserContext.getUser();
 	}
 
 }
